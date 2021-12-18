@@ -4,15 +4,31 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var hbs = require('hbs');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
+
+// mongoose connection setup
+var mongoose = require('mongoose');
+var db = mongoose.connection;
+var mongoDB = process.env.MONGODB_URI;
+var session = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(session);
+var store = new MongoDBStore({
+  uri: mongoDB,
+  collection: 'userSessions'
+}, function(error) {
+  if (error) { console.log(error); }
+});
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+db.on('error', console.error.bind(console, 'connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+hbs.registerPartials(__dirname + '/views/partials/');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,8 +36,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// session setup
+var sess = {
+  'secret': '343ji43j4n3jn4jk3n',
+  'cookie': {},
+  'store': store,
+  'resave': false,
+  'saveUninitialized': true
+}
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
+}
+app.use(session(sess));
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

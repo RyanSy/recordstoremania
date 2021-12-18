@@ -1,0 +1,20 @@
+{{> nav}}
+
+<div class="container mt-5 mb-5">
+    <h5 class="text-center">Register For Free</h5>
+    <form action="/register" method="post">
+      <div class="form-group">
+        <label for="inputUsername">Username</label>
+        <input type="text" class="form-control col-lg-6" id="inputUsername" name="username" aria-describedby="usernameHelp" placeholder="Enter a username" required="true">
+      </div>
+      <div class="form-group">
+        <label for="inputEmail">Email address</label>
+        <input type="email" class="form-control col-lg-6" id="inputEmail" name="email" aria-describedby="emailHelp" placeholder="Enter email" required="true">
+      </div>
+      <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control col-lg-6" id="inputPassword" name="password" placeholder="Enter Password" required="true">
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
