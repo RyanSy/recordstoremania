@@ -22,30 +22,30 @@ router.get('/register', user_controller.display_registration);
 router.post('/register', user_controller.register_user);
 
 // display login page
-// router.get('/login', user_controller.display_login);
+router.get('/login', user_controller.display_login);
 
 // login user
-// router.post('/login', user_controller.login_user);
+router.post('/login', user_controller.login_user);
 
 // logout user
-// router.get('/logout', user_controller.logout_user);
+router.get('/logout', user_controller.logout_user);
 
 // display forgot password page
-// router.get('/forgot', user_controller.display_forgot);
+router.get('/forgot', user_controller.display_forgot);
 
 // send reset password email
-// router.post('/forgot', user_controller.send_reset);
+router.post('/forgot', user_controller.send_reset);
 
 // display reset password page
-// router.get('/reset/:token', user_controller.display_reset);
+router.get('/reset/:token', user_controller.display_reset);
 
 // reset password
-// router.post('/reset', user_controller.reset_password);
+router.post('/reset', user_controller.reset_password);
 
 // display password updated confirmation page
-// router.get('/password-updated', user_controller.password_updated);
+router.get('/password-updated', user_controller.password_updated);
 
 // display password updated confirmation page
-// router.get('/session-expired', user_controller.session_expired);
+router.get('/session-expired', user_controller.session_expired);
 
 module.exports = router;

@@ -22,7 +22,6 @@ exports.register_user = function(req, res) {
       res.render('error', {message: 'An error occured registering that user'});
     }
     if (user) {
-      console.log(user);
       res.render('already-registered', {email: req.body.email});
     }
     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
@@ -51,7 +50,7 @@ exports.register_user = function(req, res) {
 // display login page
 exports.display_login = function(req, res) {
   res.render('login', {
-    title: 'Log into Record Show Mania'
+    title: 'Log into Record Store Mania'
   });
 }
 
@@ -61,28 +60,24 @@ exports.login_user = function(req, res, next) {
     if (err) {
       console.log(err);
       res.render('error', {message: 'An error occured logging in that user'});
-    } else {
-      if (!user) {
-        res.send(`${req.body.email} is not registered.`);
-      } else {
-        bcrypt.compare(req.body.password, user.password, function(err, result) {
-          if (err) {
-            console.log(err);
-            res.render('error', {message: 'An error occured logging in that user'});
-          }
-          if (result == true) {
-            console.log('user logged in: ', user);
-            console.log('user is admin? ', user.isAdmin);
-            req.session.isLoggedIn = true;
-            req.session.username = user.username;
-            req.session.isAdmin = user.isAdmin;
-            res.redirect('/');
-          } else {
-            res.render('error', {message: 'Password incorrect, please go back and try again'});
-          }
-        });
-      }
     }
+    if (!user) {
+      res.send(`${req.body.email} is not registered.`);
+    }
+    bcrypt.compare(req.body.password, user.password, function(err, result) {
+      if (err) {
+        console.log(err);
+        res.render('error', {message: 'An error occured logging in that user'});
+      }
+      if (result === true) {
+        req.session.isLoggedIn = true;
+        req.session.username = user.username;
+        req.session.isAdmin = user.isAdmin;
+        res.redirect('/');
+      } else {
+        res.render('error', {message: 'Password incorrect, please go back and try again'});
+      }
+    });
   });
 }
 
@@ -195,12 +190,11 @@ exports.logout_user = function(req, res) {
   req.session.destroy(function(err) {
     if (err) {
       console.log(err);
-      res.render('error', {message: 'An error occured logging out that user'});
-    } else {
-      res.render('logout', {
-        title: 'You have been logged out.'
-      });
+      res.render('error', { message: 'An error occured logging out that user' });
     }
+    res.render('logged-out', {
+      title: 'You have been logged out.'
+    });
   });
 }
 
